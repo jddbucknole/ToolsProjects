@@ -1,0 +1,45 @@
+---
+title: 'Week 1: RMarkdown & Intro R'
+author: 'Your names here'
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part 1: R Markdown
+
+Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. Note that the text in the document is typed just like a normal Word document. 
+
+To add code, we add a code chunk.  In the provided code chunk below, do the following:
+
+1. Remove the code in the chunk.
+2. Add 3 and 5 and save the result into the variable `easysum`.
+3. Take the square root of 42 and don't save it.
+4. Save the names of your group (characters) into a vector called `group_members`
+5. Print the vector `group_members`
+
+```{r part1}
+delete_me <- 0
+```
+
+### Summary stats and simple plots
+
+You can also embed plots and create simple summary statistics. 
+
+Let's examine the TidyTuesday dataset on Philadelphia Parking Violations.  Please visit this [website](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-12-03)
+
+
+
+
+```{r philly}
+tickets <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-12-03/tickets.csv")
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
