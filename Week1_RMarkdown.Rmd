@@ -3,11 +3,13 @@ title: 'Week 1: RMarkdown & Intro R'
 author: 'Your names here'
 output: 
   html_document:
-    code_folding: hide
+    code_folding: show
 ---
 
+Make sure that you have installed tidyverse. If the first knit doesn't work, run install.packages("tidyverse") in the console.
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 ## Part 1: R Markdown
@@ -30,16 +32,27 @@ delete_me <- 0
 
 ### Summary stats and simple plots
 
-You can also embed plots and create simple summary statistics. 
 
-Let's examine the TidyTuesday dataset on Philadelphia Parking Violations.  Please visit this [website](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-12-03)
-
+Let's examine the TidyTuesday dataset on Philadelphia Parking Violations.  Please visit this [website](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-12-03) for more information about the data. This is a HUGE dataset, so it will take some time to load.
 
 
 
 ```{r philly}
-tickets <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-12-03/tickets.csv")
+tickets <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-12-03/tickets.csv")
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Try adding `echo = FALSE` in the header of the chunk, reknit, and note the effect on the HTML document.
+
+
+Now that the data is loaded, let's explore it a bit. Find the following:
+1. The mean value of the fine using the mean() function
+2. The top 5 violations in the violation_desc. FOr now, use the table() function and either sort or scan the table for the top 5.
+3. The fine for "EXCESSIVE IDLING" 
+4. A scatter plot of lat/lon using the following function `plot(tickets$lat, tickets$lon)`
+
+```{r}
+deleteme <-0
+```
+
+<Write a short summary of what you found. Call out the values requested above in a narrative structure (like a report).  Delete this line before submitting.>
