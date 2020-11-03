@@ -1,0 +1,36 @@
+pizza_jared <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-01/pizza_jared.csv")
+pizza_barstool <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-01/pizza_barstool.csv")
+pizza_datafiniti <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-01/pizza_datafiniti.csv")
+
+
+video_games <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-07-30/video_games.csv")
+video_games %>%
+  ggplot(aes(x = average_playtime, y= metascore)) + geom_point()
+
+
+library(tidyverse)
+library(babynames)
+library(scales)
+babynames %>%
+  group_by(sex, year) %>%
+  filter(n == max(n)) %>%
+  mutate(sex = ifelse(sex == "M", "Male", "Female")) %>%
+  ggplot(aes(x = year, y = prop, color = sex)) + 
+    geom_line() + 
+    facet_wrap(~sex) +
+    geom_text_repel(aes(label = name), size = 2, nudge_x = 2) + 
+    geom_point() + 
+    scale_y_continuous(labels = scales::percent) +
+    labs(title = "Most common name by year", x = "Year", y = "Percent of babies", color = "Sex")
+
+babynames %>%
+  group_by(sex, year) %>%
+  filter(n == max(n)) %>%
+  group_by(sex)
+
+babynames %>%
+  filter(name %in% c("John", "Paul", "George", "Ringo"), sex == "M") %>%
+  ggplot(aes(x = year, y = prop, color = name)) + geom_line()
+
+
+

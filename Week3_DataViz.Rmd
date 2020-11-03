@@ -1,0 +1,16 @@
+---
+title: "Week 3 Data Visualization"
+author: "<your names here>"
+output: html_document
+---
+
+```{r setup, warning = F, message = F}
+library(babynames)
+library(tidyverse)
+```
+
+# Part 1 Babynames
+
+## Most common names each year separated by sex
+
+
