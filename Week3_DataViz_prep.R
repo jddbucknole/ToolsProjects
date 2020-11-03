@@ -37,4 +37,14 @@ babynames %>%
     labs(title = "The Beatles", x = "Year", y = "Number of Baby Beatles")
 
 
+ikea <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-03/ikea.csv')
 
+ikea %>%
+  group_by(category) %>%
+  summarize(avgprice = mean(price)) %>%
+  ggplot(aes(x = fct_reorder(category, avgprice), y = avgprice)) + 
+    geom_col() + coord_flip()
+  
+  
+  
+  

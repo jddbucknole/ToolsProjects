@@ -11,7 +11,37 @@ library(scales)
 library(ggrepel)
 ```
 
-# Part 1 Babynames
+# Part 1 Movies!
+
+```{r}
+movie <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-10-23/movie_profit.csv")
+```
+
+Let's take another look at the movie dataset from last week. Make a column chart showing the Top 10 movies by worldwide gross. Recall that column charts require an x (categories) and y (bar height) aesthetic.  The bars should represent the respective worldwide gross of the movie *and be ordered by from largest to smallest*.  Note: this is handled by reordering factors (arrange will not be enough!). There is a function to assist in the `forcats` package that is included in `tidyverse`.  A simple google search should help.
+
+Make use of the coord_flip() layer to make the labels readable and color code the bars (not just the outlines of the bars!) by the MPAA rating of the movie.  Finish with a short sentence describing what you see.
+
+```{r top10movies}
+deleteme <- 0
+```
+
+**Description of findings**
+
+
+# Part 2 Babynames
+
+## Group name popularity
+
+Create a graph showing the popularity of your group members first names over time. Make sure to account for the correct sex.
+
+Here is an example for the Beatles. What name benefited from the appearance?
+
+<center> <img src = "https://github.com/jddbucknole/ToolsProjects/blob/main/beatles.png?raw=true">
+
+```{r groupnames}
+deleteme <- 0
+```
+
 
 ## Most common names each year separated by sex
 
@@ -30,12 +60,4 @@ deleteme <- 0
 There is a weird spike with a new woman's name taking over the top spot around 1946.  What is that name and why did it spike?
 
 **Answer here**
-
-## Group name popularity
-
-Create a graph showing the popularity of your group members first names over time. Make sure to account for the correct sex.
-
-Here is an example for the Beatles.  
-
-<center> <img src = "https://github.com/jddbucknole/ToolsProjects/blob/main/beatles.png?raw=true">
 
