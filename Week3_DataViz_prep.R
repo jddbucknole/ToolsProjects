@@ -11,6 +11,7 @@ video_games %>%
 library(tidyverse)
 library(babynames)
 library(scales)
+library(ggrepel)
 babynames %>%
   group_by(sex, year) %>%
   filter(n == max(n)) %>%
@@ -30,7 +31,10 @@ babynames %>%
 
 babynames %>%
   filter(name %in% c("John", "Paul", "George", "Ringo"), sex == "M") %>%
-  ggplot(aes(x = year, y = prop, color = name)) + geom_line()
+  ggplot(aes(x = year, y = n, color = name)) + geom_line() +
+    geom_vline(xintercept = 1964) + 
+    annotate("text", x = 1985, y = 100000, label = "Beatles appear on Ed Sullivan", size = 6) + 
+    labs(title = "The Beatles", x = "Year", y = "Number of Baby Beatles")
 
 
 

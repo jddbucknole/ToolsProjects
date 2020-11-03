@@ -5,12 +5,16 @@ output: html_document
 ---
 
 ```{r setup, warning = F, message = F}
-library(babynames)
 library(tidyverse)
+library(babynames)
+library(scales)
+library(ggrepel)
 ```
 
 # Part 1 Babynames
 
 ## Most common names each year separated by sex
 
+How has the most common name (by percentage of a sex) changed over time? In addition, what are those 'common' names?  For this prompt, there will be some learning via exploration.  Create the following plot: 
 
+<center> <img src="https://github.com/jddbucknole/ToolsProjects/blob/main/Rplot01.png?raw=true">
