@@ -18,3 +18,24 @@ library(ggrepel)
 How has the most common name (by percentage of a sex) changed over time? In addition, what are those 'common' names?  For this prompt, there will be some learning via exploration.  Create the following plot: 
 
 <center> <img src="https://github.com/jddbucknole/ToolsProjects/blob/main/Rplot01.png?raw=true">
+
+For your solution, you will need to research the scales package (to get the labels on the y axis to be percents) and the ggrepel packages to have non-overlapping labels.  Don't neglect the labels and the fact that the sex variable has been recoded.
+
+Obviously, this is still a cluttered graph.  If you can think of a way to make it cleaner, please do.  My initial impression is only to show the name when the name changes, but this may be difficult.  Put your code below.  You can accomplish this with one piped series of commands, but that isn't necessary.
+
+```{r}
+deleteme <- 0
+```
+
+There is a weird spike with a new woman's name taking over the top spot around 1946.  What is that name and why did it spike?
+
+**Answer here**
+
+## Group name popularity
+
+Create a graph showing the popularity of your group members first names over time. Make sure to account for the correct sex.
+
+Here is an example for the Beatles.  
+
+<center> <img src = "https://github.com/jddbucknole/ToolsProjects/blob/main/beatles.png?raw=true">
+
