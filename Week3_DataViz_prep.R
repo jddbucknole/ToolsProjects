@@ -45,6 +45,47 @@ ikea %>%
   ggplot(aes(x = fct_reorder(category, avgprice), y = avgprice)) + 
     geom_col() + coord_flip()
   
+tickets <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-12-03/tickets.csv")
+
+install.packages("ggmap")
+library(ggmap)
+?register_google
+
+
+register_google(key = "AIzaSyDPwBZWah5bBRRjhIU-HcycANbd1YY9m5U", write = TRUE)
+
+map <- get_googlemap("Philadelphia, PA", zoom = 13, maptype = "roadmap")
+ggmap(map) + 
+  geom_point(data = tickets, aes(x = lon, y = lat))
+library(scales)
+ devtools::install_github("sjmgarnier/viridis")
+ 
+ library(viridis)
+tickets1<- tickets[sample(nrow(tickets), 1000),]
+tickets2 <- tickets %>% filter(violation_desc == "SCHOOL ZONE")
+ggmap(map) + 
+  stat_density_2d(data = tickets2, aes(x = lon, y = lat, fill = ..level.., alpha = ..level..), 
+                                       geom= "polygon", size= 0.01, bins = 5)+
+  scale_fill_viridis() +
+  scale_alpha(range=c(0.2, 0.4), guide=FALSE)
+
+SCtickets3 <- tickets %>%
+  count(violation_desc) %>%
+  arrange(-n)
   
-  
-  
+library(nycflights13)
+library(viridis)
+library(ggmap)
+dat <- flights  %>%
+  count(dest, carrier) %>%
+  left_join(airports, by = c("dest" = "faa"))
+map <- get_googlemap("United States", zoom = 4, maptype = "roadmap")
+
+ggmap(map) +
+  geom_point(data = dat, aes(x = lon, y = lat, size = n, color = carrier, alpha = .5)) + 
+  facet_wrap(~carrier)
+
+
+
+
+
