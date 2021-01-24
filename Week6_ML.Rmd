@@ -1,7 +1,6 @@
 ---
 title: 'Week 6: Machine Learning Intro'
 author: "<yournameshere>"
-date: "11/23/2020"
 output: html_document
 ---
 
@@ -11,6 +10,8 @@ library(rpart)
 library(rpart.plot)
 library(class)
 library(caret)
+library(ISLR)
+library(fastDummies)
 ```
 
 # Part 1: Supervised Learning
@@ -75,6 +76,7 @@ You should note that the tree is quite busy trying to make the best prediction o
 pruned_regtree <- prune(regtreemodel, cp = .075)
 rpart.plot(pruned_regtree)
 ```
+
 Notice that the pruned tree is MUCH simpler.  Once again, the solution makes predictions based on averaging the sales of the observations in the training set that end at that terminal node.  
 
 Add code to use the pruned tree to predict on the test set (same function as prediction elsewhere) and calculate the RMSE for this model (saved as rmse_regtree).
@@ -83,7 +85,7 @@ Add code to use the pruned tree to predict on the test set (same function as pre
 deleteme <- 0
 ```
 
-**Write a few lines interpreting the tree model (which predictors matter and how).  In addition, write a sentence comparing the results or the linear regression vs. the regression tree. Which do you prefer?**
+*Write a few lines interpreting the tree model (which predictors matter and how).  In addition, write a sentence comparing the results or the linear regression vs. the regression tree. Which do you prefer?*
 
 ## Classification Methods
 
@@ -92,14 +94,126 @@ So far, we have focused on predicting a numerical output, but what if we want to
 Since our output is numeric, we need to create a categorical representation of the response.  For this, we will try to predict the occurance of a large amount of sales.  If sales are over 10, we will consider this a success.  Create a new variable in the dataset that is 1 if sales exceed 10 and 0 otherwise.  Use `mutate` and `ifelse` to accomplish this.
 
 ```{r}
-deleteme <- 0
+#Code to create success column and remove Sales for train and test sets
+train <- train %>%
+  mutate(success = ifelse(Sales > 10, 1, 0)) %>%
+  select(-Sales)
+
+
+
+test <- test %>%
+  mutate(success = ifelse(Sales > 10, 1, 0)) %>%
+  select(-Sales)
+
 ```
 
 ### Model 3: Logistic regression
 
-1. Fit a logistic regression model predicting the probability of a 'success' using all predictor variables EXCEPT Sales. 
-2. Choose which predictors you think are significant in your final model.
-3. Predict the 'response' for the test data.
-4. Convert the predictions to 1 if probability is greater than 0.5 and 0 otherwise.
-5. Use the confusionMatrix function 
+1. Fit a logistic regression model predicting the probability of a 'success' using all predictor variables EXCEPT Sales using the train dataset. 
+2. Choose which predictors you think are significant and make your final model called `logreg_model`.
+3. Predict the 'response' for the test data using your model.
+4. Convert the predicted probabilities to 1 if probability is greater than 0.5 and 0 otherwise.
+5. Use the confusionMatrix function to evaluate the model.
+
+```{r}
+deleteme <- 0
+```
+
+*Write a sentence or two explaining which variables matter (and how) in predicting success*
+
+### Model 4: k-Nearest Neighbors
+
+The k-nearest neighbors algorithm is a simple method that computes the class probability of a test point as the percent of the k-nearest training points of a given class.  It returns the majority class in the k-nearest neighbors as the prediction unless specified.  Because distance metrics are essential to finding the nearest points, it is important that the features are normalized so the distances are comparable. This is common practice in most machine learning techniques.
+
+I have written a function to convert the categorical factor variables to dummy variables (as we need to convert 'distances') as well as scale the numeric variable to a 0-1 scale.  
+
+```{r}
+normalize <- function(x){
+  (max(x) - x)/(max(x) - min(x))
+}
+
+train_labels <- train$success
+knn_train <- train %>% select(-success)
+test_labels <- test$success
+knn_test <- test %>% select(-success)
+
+norm_train <- knn_train %>%
+  dummy_cols() %>%
+  select_if(is.numeric) %>%
+  mutate_all(normalize)
+
+norm_test <- knn_test %>%
+  dummy_cols() %>%
+  select_if(is.numeric) %>%
+  mutate_all(normalize)
+
+```
+
+Now we can create the kNN model using the `kNN()` function.  The `knn()` function in the `class` package takes 4 arguments:
+
+- train (the normalized training dataset without the class labels)
+- test (the normalized test dataset without the class labels)
+- cl (the class labels for the training dataset)
+- k (the number of nearest neighbors to examine)
+
+This function will output the predicted class labels for the test dataset. We can then use the `confusionMatrix()` function to evaluate this models fit.  Feel free to try a few choices of `k` in the model if you'd like.
+
+```{r}
+#Fit the model and evaluate on the test set
+deleteme <- 0
+```
+
+*Write a sentence or two on the knn_model accuracy*
+
+### Model 5: Classification Trees
+
+Similar to the regression trees above, we can use the 'tree' structure to predict a categorical response.  In fact, the model is fit in the exact same way using `rpart`.  The difference is the final parameter should be `method = 'class'`.  Otherwise, everything else is the same!
+
+1. Fit the classification tree (`classtree_model`) using the `rpart()` function on the training data to predict `success`.
+2. prune the tree as above using cp = 0.075.
+3. Visualize the final model using `rpart.plot`.
+4. Predict the classes in the test set.
+5. Evaluation the model fit using the `confusionMatrix()` function
+
+```{r}
+deleteme <- 0
+```
+
+*Write a sentence or two on the classification tree accuracy*
+
+*Write a few sentences on how the various models compare in efficacy*
+
+# Part 2: Unsupervised Learning
+
+Unsupervised learning is such that the data is not labelled *a priori*.  The goal is simply to find groups or clusters within the data based on similarities in the variables.  Distance metrics are key here as in `knn` but the fundamental difference is that clustering doesn't have predetermined groups.  In fact, we don't even know how many groups exist!  Market segmentation is a perfect example of this phenomenon.  Marketers seek to find similarities in their customers to (hopefully) target groups of people in similar ways.
+
+## Method 1: k-means clustering
+
+The k-means clustering algorithm contains steps that iterate
+
+1. Choose k random points to be the initial class centroids.
+2. Assign each point in the dataset to the class with the nearest centroid.
+3. Calculate the average of all points ina given class.  This is the new class centroid.
+4. Repeat steps 1-3 until convergence.
+
+The following [video](https://www.youtube.com/watch?v=IuRb3y8qKX4) shows this process.  The best part is that all of this happens under the hood and the function is simple!
+
+For our example, we will use the College data in the ISLR package to find 3 clusters within the colleges.  As with `knn` the data needs to be numeric and normalized.  The data is loaded and preprocessed below.  Add the code to run the kmeans algorithm.  The function is `kmeans()` which takes the data and the number of clusters you desire.  The output is the cluster label for each point.  To unify the results, I have set the random seed.  This will assure cluster 1 stays 'cluster 1'.
+
+```{r}
+college <- College %>%
+  mutate(Private = ifelse(Private == "Yes", 1, 0)) %>%
+  mutate_all(normalize)
+
+set.seed(1234)
+#Your kmeans code (Save the results in a variable called clusters)
+
+```
+
+Examine the different clusters by looking through dataset.  Do you see any ways to 'define' the clusters in a contextual sense? What 'type' of school falls into cluster 1, 2, or 3? This is the art of data science!
+
+### Hierarchical Clustering 
+
+If time permits!! COMING SOON
+
 
