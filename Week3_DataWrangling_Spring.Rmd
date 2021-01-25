@@ -75,8 +75,8 @@ deleteme <- 0
 The temperature variable has been 'normalized' such that 0 is (close to) the lowest temperature recorded and 1 is the highest.  First, we will convert the temperature in the hourly dataset into a standard Celsius form for ease of interpretation then find the average number of users on days with freezing temperature (<0 C). 
 
 1. Use the mutate function to create a new column `Temp_in_C = temp * 47 - 8` (see the website for details)
-2. Filter out days below 0 temperature.
-3. Find the average.
+2. Filter for days below 0 temperature.
+3. Find the average rider count.
 
 Ideally, this is handled in a single piped set of commands without saving the intermediate steps.
 
