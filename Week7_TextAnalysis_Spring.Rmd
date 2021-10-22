@@ -68,13 +68,21 @@ deleteme <- 0
 hp_characters <- c("harry", "ron", "hermione", "dumbledore", "sirius",
                      "mcgonagall", "snape", "hagrid", "voldemort",
                      "ginny","neville", "malfoy","crookshanks")
+<<<<<<< HEAD
 stop_words_characters <- stop_words %>%
   bind_rows(tibble(word = hp_characters, lexicon = "HP"))
+=======
+stop_words_characters <- c(stop_words, hp_characters)
+>>>>>>> 3d2918b4da593054dc6a17f1d9c6c2ed2a3560ca
 ##Your code
 
 ```
 
+<<<<<<< HEAD
 3. Focusing only on the characters in the list above. Make a faceted bar graph including ONLY those characters occurrence separated by book.  The output should look quite similar to the output of numbers 1 and 2, but include 7 different graphs.  Comment on how the series focus change (or didn't) over time.
+=======
+3. Focusing only on the characters in the list above. Make a faceted bar graph including ONLY those characters occurence separated by book.  The output should look quite similar to the output of numbers 1 and 2, but include 7 different graphs.  Comment on how the series focus change (or didn't) over time.
+>>>>>>> 3d2918b4da593054dc6a17f1d9c6c2ed2a3560ca
 ```{r}
 deleteme <- 0
 ```
