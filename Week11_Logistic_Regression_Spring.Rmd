@@ -1,0 +1,62 @@
+---
+title: 'Week 11: Logistic Regression Modeling'
+author: "YourNamesHere"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=F, message=F}
+library(tidyverse)
+```
+
+
+
+## Introduction
+We will examine the data from the Tidy Tuesday dataset on [NYC Restaurant Inspections](https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-12-11). Our goal is to predict what conditions lead to a 'critical flag' from the health department.  This is a subsample including 50000 records (of the 300000 that were sampled for the Tidy Tuesday project).
+
+```{r}
+nyc <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/nyc_sub.csv')
+```
+
+## Preliminary Analysis
+
+As with any analysis, we should begin with an exploration of the data.  To accomplish this, complete the following tasks and summarize your findings below. If you'd like to create separate code blocks/summaries for each task, feel free to do so.
+
+1. Filter the data to remove records with boro = 'Missing' or critical_flag = 'Not Applicable' or grade = "Not yet graded" or NA.
+2. Find the mean and standard deviation of score for each grade as well as the number of restaurants have received each grade.  Is a higher or lower score desired? Which grade has the most consistent scores? Visualize this with a side-by-side violin plot (`geom_violin()`) of scores by grade.
+3. How do scores differ across boroughs (boro)? Make a side-by-side boxplot (or violin plot) of scores vs. borough.
+4. Construct a summary of the percent of critical flags by borough (this can be accomplished with the `mean()` function on a logical statement).  Visualize this summary using the `geom_bin2d()` function to create a heatmap. We will do this together.
+
+```{r}
+deleteme <- 0
+```
+
+## Where to get certain foods?
+
+Make a heatmap of the types of food in each borough.  Because there are so many options, filter the cuisine descriptions to only include American, Chinese, Italian, Mexican, and Pizza.  Use a low color of red and a high of green. Your heatmap should have boro on the x, cuisine_description on the y, and the fill should be the proportion of restaurants in a specific borough that are of the given cuisine. This can help me decide where to travel for some New York pizza.
+
+
+```{r}
+deleteme <- 0
+```
+
+
+## Logistic Regression
+
+Our primary goal is to understand how score and borough relate to the occurrence of a critical flag.  We would expect that higher scores are more likely to lead to a critical flag, but by how much? Should we worry about a small increase at the low score? What about at a high score? Are certain boroughs more likely to get flagged than others?
+
+1. The `glm()` function requires the response variable to be 0/1. Using the `mutate()` and `ifelse()` functions, recode the critical_flag column as "Critical" = 1 and "Not Critical" = 0.
+2. There are scores of -1 in this dataset (many of which contain violations).  Because this is an unknown value in the dataset, remove those records with a score < 0.
+3. Run a logistic regression to predict the occurrence of a critical flag as a function of borough (boro) and score.
+4. Comment on the results of this model.  Which borough has the highest odds of critical flag after accounting for score? How does an increase in score of 1 unit affect the log odds of a critical flag? Comment below.
+
+```{r}
+deleteme <- 0
+```
+
+## Prediction
+
+Vito Corleone is looking at opening a 'legitimate business establishment' in NYC (specifically Queens).  He is looking at buying a business with a score of 20 and doesn't want the health inspector to raise any questions.  For this specific restaurant, what is the *probability* that this restaurant will receive a critical flag? We will ignore the payoffs that certainly 'would **never** happen'.
+
+```{r}
+deleteme <- 0
+```

@@ -1,0 +1,70 @@
+---
+title: "Week 8: Sentiment Analysis"
+author: "<your names here>"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidytext)
+library(wordcloud)
+library(textdata)
+```
+
+# Introduction
+
+This week, we will examine the text of the Harry Potter books.  While I assume most have either read the books or seen the movies, that is not a requirement.  We will utilize the package `harrypotter` created by Bradley Boehmke and hosted on github.  Make sure to install the package prior to knitting this document. The package contains the raw text of all books separated by chapter.  The code below reads in all books and combines them into one dataset separated by book and chapter.  The columns `text` contains the entirety of the associated chapter.
+
+Examine the code below and the resulting dataset `hpbooks`.  You should understand what is happening and get familiar with the end result.  For reference, `tibble` is the tidy version of `data.frame`.  It creates a tidy dataframe with the variables listed.  This is required because the package only provides the text in a character vector form.
+
+
+```{r}
+library(harrypotter)
+
+stone <- tibble(book = "1-Philosopher_Stone", numbook = 1, ch = 1:length(philosophers_stone), text = philosophers_stone)
+chamber <- tibble(book = "2-Chamber_of_Secrets", numbook = 2,ch = 1:length(chamber_of_secrets), text = chamber_of_secrets)
+prisoner <- tibble(book = "3-Prisoner_of_Azkaban", numbook = 3,ch = 1:length(prisoner_of_azkaban), text = prisoner_of_azkaban)
+goblet <- tibble(book = "4-Goblet_of_Fire", numbook = 4,ch = 1:length(goblet_of_fire), text = goblet_of_fire)
+phoenix <- tibble(book = "5-Order_of_the_Phoenix", numbook = 5,ch = 1:length(order_of_the_phoenix), text = order_of_the_phoenix)
+prince <- tibble(book = "6-Half_Blood_Prince", numbook = 6,ch = 1:length(half_blood_prince), text = half_blood_prince)
+hallows <- tibble(book = "7-Deathly_Hallows", numbook = 7,ch = 1:length(deathly_hallows), text = deathly_hallows)
+
+hpbooks <- stone %>%
+  bind_rows(chamber) %>%
+  bind_rows(prisoner) %>%
+  bind_rows(goblet) %>%
+  bind_rows(phoenix) %>%
+  bind_rows(prince) %>%
+  bind_rows(hallows) 
+```
+
+
+
+# Part 2: Sentiment Analysis in Harry Potter
+
+## Mood over the series
+
+How does the 'mood' change in the Harry Potter series? Use the `bing` lexicon to find the 'net sentiment' by book.  To calculate 'net sentiment', take the number of positive words minus the number of negative words as determined by the `bing` lexicon.  Plot these net sentiments by book in either a dotplot or bar chart. You will need to use a variety of commands for this problem.
+
+```{r}
+deleteme <- 0
+```
+
+**Write a few sentences about what you've found.  How does the mood change as the books progress**
+
+## AFinn analysis of The Half-blood Prince
+
+Using the `AFINN` lexicon, find the average sentiment by chapter in book 6 (The Half Blood Prince) and plot it using a line plot. Note: you don't want to count the words as the average should include all words (duplicates included).  Does the average sentiment at the end of the book make sense? What happened? (Spoiler alert) Explain below the code.
+
+```{r}
+deleteme <- 0
+```
+
+## Anticipation in The Sorcerer's (Philosopher's) Stone
+
+Create a chapter by chapter count of anticipation words in the `nrc` lexicon.  When does the feeling of anticipation peak? Does that surprise you or does it make sense?  Plot the progression of anticipation words by chapter using a line plot.
+
+```{r}
+deleteme <- 0
+```
+

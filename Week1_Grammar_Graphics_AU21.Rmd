@@ -1,0 +1,64 @@
+---
+title: 'Week 1: Pokemon'
+author: "<your names here>"
+date: "10/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+pokemon <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/pokemon.csv')
+```
+
+The 'Pokemon Complete Dataset comes from [kaggle.com](https://www.kaggle.com/kylekohnen/complete-pokemon-data-set) and contains detailed information about all pokemon up through generation 8.  While I wasn't an avid player of the game, I'm aware that pokemon have different qualities and fight each other in the video game.  This project will examine qualities of different types of pokemon.
+
+First, take a look at the dataset in the file `pokemon`
+```{r}
+glimpse(pokemon)
+```
+
+## Part 1: Histogram
+
+Let's get an idea of the distribution of hit points (`hp`) for the different pokemon.  Make a histogram of the hit points that is properly labelled.  Include a one sentence description of what you see.
+
+```{r}
+```
+
+Pokemon have different 'types' that are listed in the `typing` column.  Note that some pokemon belong to more than one 'type' separated by a '~'.  Below is code to give multiple rows to each pokemon with more than one type and subsetting the data to only include pokemon of type Fire, Water, and Electric.  Don't worry about the details of the code, but look at the final result.
+
+```{r}
+pokemon_sub <- pokemon %>%
+  separate_rows(typing, sep = '~') %>%
+  filter(typing %in% c("Fire", "Water", "Electric"))
+```
+
+Using the subset of data, make a side-by-side boxplot of the `defense` strength separated by type.  Write a one sentence summary of what you find.
+
+```{r}
+```
+
+
+## Part 2: Fighting Styles
+
+Each pokemon has an attack, defense, special attack, and special defense number.  The code below creates new columns `total_attack` and `total_defense` by summing the respective variables. It also separates those with more than one type into multiple rows.
+
+```{r}
+pokemon_tot <- pokemon %>%
+  separate_rows(typing, sep = '~') %>%
+  mutate(total_attack = attack + special_attack, 
+         total_defense = defense + special_defense)
+```
+
+Make a faceted scatterplot of the total_attack (y) vs. the total_defense (x) colored by whether the pokemon is legendary and faceted by type.  Make sure your graph has appropriate labels.  Write a few sentences describing what you found.
+
+```{r}
+```
+
+Finally, I happen to be really strong with 'psychic attacks'.  On which type of pokemon is that attack most effective? Copy your code from above and change the color aesthetic to the appropriate variable.  This graph should show which types are susceptible to psychic attacks and which are not. Explain below.
+
+```{r}
+```
+
+## Part 3: Explore!
+
+Make a plot of SOMETHING you are interested in.  This is optional, but I'd love to see how questions come to mind.

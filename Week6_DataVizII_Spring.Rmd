@@ -1,0 +1,87 @@
+---
+title: "Week 6 Data Visualization II"
+author: "<your names here>"
+output: html_document
+---
+
+```{r setup, warning = F, message = F}
+library(tidyverse)
+library(babynames)
+library(scales)
+library(ggrepel)
+library(ggmap)
+```
+
+
+# Part 1 Babynames
+
+## Most common names each year separated by sex
+
+How has the most common name (by percentage of a sex) changed over time? In addition, what are those 'common' names?  For this prompt, there will be some learning via exploration.  Create the following plot: 
+
+<center> <img src="https://github.com/jddbucknole/ToolsProjects/blob/main/Rplot01.png?raw=true"></center>
+
+For your solution, you will need to research the scales package (to get the labels on the y axis to be percents) and the ggrepel packages to have non-overlapping labels.  Don't neglect the labels and the fact that the sex variable has been recoded.
+
+Obviously, this is still a cluttered graph.  If you can think of a way to make it cleaner, please do.  My initial impression is only to show the name when the name changes, but this may be difficult.  Put your code below.  You can accomplish this with one piped series of commands, but that isn't necessary.
+
+```{r}
+deleteme <- 0
+```
+
+There is a weird spike with a new woman's name taking over the top spot around 1946.  What is that name and why did it spike?
+
+**Answer here**
+
+# Part 2: Where can I get a burrito?
+
+Chipotle Mexican Grill was founded in Colorado in 1993, and has since ballooned into a leader in the fast-casual food industry.  For this problem, we are going to use the dataset found on [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations) that contains location information for every Chipotle restaurant in the U.S.  I believe this data was collected within the last year.  
+
+```{r}
+chipotle <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/chipotle_stores.csv')
+statepop_2018 <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/state_pop_2018.csv')
+```
+
+## Where are the Chipotles?
+
+We need to visualize (at the state level) where the Chipotles are.  Make a choropleth of the United States (using map_data("state")) in which each state is colored by the number of Chipotle restaurants in that state.  You will need to do a little preprocessing using dplyr to get the `chipotle` dataset in the correct form before merging with the map_data.  I recommend using the `scale_fill_gradient2()` layer to manually define your low, medium, and high colors.  To make the edges of the states pop, use the attribute color = white in the `geom_polygon()` layer. I also recommend `theme_void()` as the gridlines aren't terribly helpful.
+
+```{r}
+us <- map_data("state")
+```
+
+Using your map answer the following (just the state is fine):
+
+1. Which state has no Chipotle?
+
+2. Which state has the most Chipotle?
+
+
+## Chipotle per person
+
+I'm sure you're not terribly surprised at which state has the most Chipotle restaurants because there are so many people there.  I don't like to fight for my food, so I'm curious which state has the most Chipotle restaurants per person. We will use the data on state population from 2018 found [here](https://www.kaggle.com/lucasvictor/us-state-populations-2018). Because this would be a very small number, I'm going to examine the number of restaurants per million people living in the state.  To accomplish this, you need to preprocess the data as before, join that data with state population numbers, and create the column `chip_per_mil`.  From there, you can use the same map with the new fill aesthetic.  
+
+```{r}
+statepop_2018 <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/state_pop_2018.csv')
+```
+
+Comment on your results.  Are you surprised with which states have the highest Chipotle per capita?
+
+## How many Chipotle restaurants are near campus?
+
+This is an optional portion of the assignment.  
+
+I'm hungry for dinner after class, and I'd like to find the nearest Chipotle to me.  Make a map using ggmap or stamenmap that contains a background of the city of Columbus overlaid with dots on the Chipotle restaurants in the area.  If you'd like, you can place another dot (of a different color) on the Fisher campus.  This will require you to have a Google API key.  If you are considering using maps in your project, I recommend giving this a go.  
+
+1. Use the `geocode()` function in `ggmap` to find the lat/lon for Fisher.
+2. Register your google API key with R using `register_google`.
+3. Get the googlemap background using the `get_map()` function.  I recommend a zoom of 12.
+4. Plot the map using `ggmap()` then add to `geom_point()` layers--one for Fisher and another for the Chipotle restaurants.
+
+Here is my final product:
+
+<center> <img src="https://github.com/jddbucknole/ToolsProjects/blob/main/chip_fisher.png?raw=true"></center>
+
+```{r}
+deleteme <- 0
+```

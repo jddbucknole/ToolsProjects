@@ -68,7 +68,8 @@ deleteme <- 0
 hp_characters <- c("harry", "ron", "hermione", "dumbledore", "sirius",
                      "mcgonagall", "snape", "hagrid", "voldemort",
                      "ginny","neville", "malfoy","crookshanks")
-stop_words_characters <- c(stop_words, hp_characters)
+stop_words_characters <- stop_words %>%
+  bind_rows(tibble(word = hp_characters, lexicon = "HP"))
 ##Your code
 
 ```
