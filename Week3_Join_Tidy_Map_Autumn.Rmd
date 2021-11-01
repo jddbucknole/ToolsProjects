@@ -1,0 +1,124 @@
+---
+title: "Week 4: Tidyverse Practice and Data Joins"
+author: "YourNameHere"
+output: html_document
+---
+
+```{r, warning = FALSE, message = FALSE}
+#Note: the warning and message are shut off to avoid the list of overrides.  It won't be an issue but it cleans up the output!
+library(tidyverse)
+library(ggmap)
+library(scales)
+library(knitr)
+```
+
+# Part 1: Data Joins
+
+For this study, we will be looking at a large database of baseball statistics.  Don't worry if you are not familiar with baseball.  All of the desired results will be clearly outlined.
+
+First, we will load the `Lahman` package.  This the Sean Lahman database of nearly every baseball statistic from 1871 until 2019.  It is incredibly comprehensive and the information is spread across many tables forming a relational database (of sorts). To find specifics on the data tables, please visit [this website]('https://www.rdocumentation.org/packages/Lahman/versions/8.0-0').
+
+```{r}
+library(Lahman)
+```
+
+## Top 10 all-time homerun hitters
+
+While this can easily be found on Google, follow the below steps to find the top 10 all time homerun hitters (a homerun is the best offensive play in baseball and is denoted as HR in the `Batting` table).
+
+1. Find the number of homeruns hit by each person over their career.  Each player has a unique playerID that is the first 5 letters of their last name, the first 2 letters of their first name, and a number designating which player in history they were to have that designation (for example, Ken Griffey Jr has the ID griffke02--his father, Ken Griffey Sr. is griffke01).  The `Batting` table contains each players statistics separated by season.  You will need to aggregate the homerun numbers.
+2. Only include the top 10 using `slice_max()`, `top_n()`, or `arrange() %>% head()`.
+3. Appropriately join the results to the `People` table to get the players names. Note, the `People` table has two ID's.  Examine the data to find the appropriate one.
+4. Display the top 10 including only nameFirst, nameLast, and career homeruns. Use the `rename()` or `select()` function to give your variables easy to read names.  In addition, pipe your table into the `kable()` function at the end to make your table look nicer. `kable()` is in the `knitr` package which you likely already have for rmarkdown to work. 
+
+```{r}
+Batting %>%
+  head() %>%
+  kable()
+```
+
+## Top 10 strikout leaders
+
+Now, repeat the same process as above for strikeouts.  Strikeouts are a defensive statistic that you can find in the `Pitching` table under `SO`.  Note how you can essentially copy the code you created above and make a few edits!
+
+```{r}
+deleteme <- 0
+```
+
+## Stolen Bases by Birth Country
+
+Are the most fleet of foot from a specific locale? Stolen Bases will be our 'metric' for speed.  Stolen bases can be found in the `Batting` table under `SB` and `birthCountry` can be found on the `People` table.
+
+1. Create a table of number of career stolen bases for every player.
+2. Filter to only include those with more than 200 career steals (this is arbitrarily selected).
+3. Join this with the `People` table to add `birthCountry`.  Count how many people in this set come from each `birthcountry` and save this dataset as `topBaseStealers`
+4. Create a table that counts the number of players in the `People` table separated by `birthCountry` and save this as `allPlayers`.
+5. Join `topBaseStealers` and `allPlayers` by the `birthCountry` variable.
+6. Create a new column that finds the percent of top tier base stealers out of the number of all players from a given country called `fast_percentage`.
+7. Arrange them in descending order of `fast_percentage`.  Is it what you expected? Why or why not?
+
+```{r}
+deleteme <- 0
+```
+
+*Comment on what you found.*
+
+## Conclusion
+
+*Write a few sentences summarizing the findings from the baseball analysis*
+
+
+# Part 2 Approval Ratings
+
+For this section, we will recreate the president approval rating plots as seen on [Five Thirty Eight]<https://projects.fivethirtyeight.com/biden-approval-rating/?ex_cid=rrpromo>.  The data read in below was downloaded from 538's website, and it contains the estimated approval/disapproval of the president based on their model of poll aggregation.  While their model isn't claiming to be perfect, it's quite good and they are a respected member of the political analytics community.  You'll notice the data also contains upper and lower 'error bars' of their estimates.
+
+```{r}
+biden <- read_csv("https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/biden_approval.csv")
+glimpse(biden)
+```
+
+You should note that there are different groups of people that may be of interest to a politician: all adults and potential voters.  For this project, we will focus on potential voters.  The goal of this assignment is to create a line chart with both the approval and disapproval lines on it over time.  To accomplish this, you'll note that the data doesn't lend itself to graphing immediately (approval and disapproval are in separate columns).  The outline of steps is listed below.  When you are finished, check how your graph compares to the one on fivethirtyeight.com.  For now, we will only plot the estimates of approval and disapproval, but you may line to explore how to create the bands around using the lo and hi estimates and other geoms.
+
+1. Filter to the appropriate subgroup.
+2. Tidy the data so the estimates are in a single column.
+3. Graph the line chart with ggplot, separating approval and disapproval by color.
+4. Add appropriate titles and move the legend to the bottom.
+
+
+```{r approval_ratings}
+```
+
+# Part 3: Where can I get a burrito?
+
+Chipotle Mexican Grill was founded in Colorado in 1993, and has since ballooned into a leader in the fast-casual food industry.  For this problem, we are going to use the dataset found on [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations) that contains location information for every Chipotle restaurant in the U.S.  I believe this data was collected within the last year.  
+
+```{r}
+chipotle <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/chipotle_stores.csv')
+statepop_2018 <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/state_pop_2018.csv')
+```
+
+## Where are the Chipotles?
+
+We need to visualize (at the state level) where the Chipotles are.  Make a choropleth of the United States (using map_data("state")) in which each state is colored by the number of Chipotle restaurants in that state.  You will need to do a little preprocessing using dplyr to get the `chipotle` dataset in the correct form before merging with the map_data.  I recommend using the `scale_fill_gradient2()` layer to manually define your low, medium, and high colors.  To make the edges of the states pop, use the attribute color = white in the `geom_polygon()` layer. I also recommend `theme_void()` as the gridlines aren't terribly helpful.
+
+```{r}
+us <- map_data("state")
+```
+
+Using your map answer the following (just the state is fine):
+
+1. Which state has no Chipotle?
+
+2. Which state has the most Chipotle?
+
+
+## Chipotle per person
+
+I'm sure you're not terribly surprised at which state has the most Chipotle restaurants because there are so many people there.  I don't like to fight for my food, so I'm curious which state has the most Chipotle restaurants per person. We will use the data on state population from 2018 found [here](https://www.kaggle.com/lucasvictor/us-state-populations-2018). Because this would be a very small number, I'm going to examine the number of restaurants per million people living in the state.  To accomplish this, you need to preprocess the data as before, join that data with state population numbers, and create the column `chip_per_mil`.  From there, you can use the same map with the new fill aesthetic.  
+
+```{r}
+statepop_2018 <- read_csv('https://raw.githubusercontent.com/jddbucknole/ToolsProjects/main/state_pop_2018.csv')
+```
+
+Comment on your results.  Are you surprised with which states have the highest Chipotle per capita?
+

@@ -1,0 +1,152 @@
+---
+title: 'Week 2: Intro Data Wrangling'
+author: 'Your names here'
+output: 
+  html_document:
+    code_folding: show
+---
+
+Make sure that you have installed tidyverse. If the first knit doesn't work, run install.packages("tidyverse") in the console.
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(babynames)
+library(scales)
+```
+
+# Part 1: Bike Share
+
+## Introduction
+
+Bike sharing systems are rapidly becoming the norm in most big cities.  This analysis will examine data from the Capital Bike Share company in DC from 2011-2012. The goal is to have a better understanding of when people use the service and what we can do to be more efficient in deployment.  
+
+First, examine the following [website](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset) to get a better understanding for the background of the project and the dataset characteristics.  
+
+## The Data
+
+The dataset of daily usage and weather is loaded below.
+
+```{r}
+url_day <- "https://raw.githubusercontent.com/jddbucknole/bikesharing/master/bike_sharing-day.csv"
+bike_day <- read.csv(url_day)
+```
+
+Explore the dataset a bit on your own here.  See what variables exist and what you may be interested in learning about. The function `str()` prints out the 'structure' of the data.  It gives the variable names and a few initial values.  Make sure you understand the key variables for analysis.  Think about what the key inputs and outputs are for the bike sharing company. No need to type any responses here.
+
+```{r}
+str(bike_day)
+```
+
+
+## Analysis
+
+### Day of Week
+
+Does daily ridership change based on day of the week? What about weekend and holiday use?
+
+Using the bike_day dataset, find the average `cnt` of bikes grouped by day of the week.  Feel free to explore the workingday and holiday variables if you'd like as well. Make sure to understand which number represents which day of the week! Don't be afraid to look outside the data.  In addition to the table of the average rides per day, make a line chart to show how average changes over the week.
+
+```{r}
+deleteme <- 0
+
+```
+
+*Write a brief summary of your results in context.*
+
+
+### Temperature
+
+The temperature variable has been 'normalized' such that 0 is (close to) the lowest temperature recorded and 1 is the highest.  First, we will convert the temperature in the hourly dataset into a standard Celsius form for ease of interpretation then find the average number of users on days with freezing temperature (<0 C). 
+
+1. Use the mutate function to create a new column `Temp_in_C = temp * 47 - 8` (see the website for details)
+2. Filter for days below 0 temperature.
+3. Find the average rider count.
+
+Ideally, this is handled in a single piped set of commands without saving the intermediate steps.
+
+```{r}
+deleteme <- 0
+```
+
+*Comment on what you found*
+
+
+### Weather 
+
+
+How does ridership change based on the weather? Also, does the weather impact casual and registered users use differently? To accomplish this, do the following:
+
+1. Change the weathersit from 1-4 to the appropriate labels from the website above.  Use a mutate and either a series of nested ifelse statements (like you'd do in excel) or examine the `case_when` function.  Documentation can be found [here]("https://dplyr.tidyverse.org/reference/case_when.html").
+2. Stack the number of casual and registered users into one column to form a tidy dataframe (one column for a label and one column for the counts).  This involves the `gather()` or `pivot_longer()` function.  I recommend using `pivot_longer()`.  We will examine this in more detail in a future class. I have already coded this for you assuming you save part 1 into a dataset called `bike_day1`.
+3. Use the appropriate dplyr verbs to summarize those data points to answer the question via a table. 
+4. Make a side-by-side column chart to illustrate the difference between casual and registered. 
+
+```{r}
+#I have separated these to allow you to see the output of these functions.
+bike_day1 <- bike_day %>%
+  mutate(weather = case_when(weathersit == 1 ~ "Clear, Partly Cloudy",
+                             weathersit == 2 ~ "Mist",
+                             weathersit == 3 ~ "Light Rain/Snow",
+                             weathersit == 4 ~ "Heavy Rain/Snow")) 
+
+bike_day2 <- bike_day1 %>%
+  pivot_longer(cols = casual:registered, names_to = "Customer_Type", values_to = "Riders")
+```
+
+*Comment on what you found*
+
+
+### Outliers
+
+One day has a particularly low usage.  Use the appropriate verb this low usage day.  Once you have found the day, see if you can find out why this usage was so low (Google is a wonderful tool!). Do NOT print out the entire dataset!! If you'd like to print the top day, use the head() function or the top_n() function.
+
+```{r}
+deleteme <- 0
+```
+
+*Comment on what you found*
+
+
+### Conclusion
+
+*Write a few sentences about what you've learned by exploring this dataset and what may be of interest to the company going forward.*
+
+
+#Part 2: Movies!
+
+```{r}
+movie <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-10-23/movie_profit.csv")
+```
+
+## Top Movies
+
+Let's take a look at a movie dataset. Make a column chart showing the Top 10 movies by worldwide gross. Recall that column charts require an x (categories) and y (bar height) aesthetic.  The bars should represent the respective worldwide gross of the movie *and be ordered by from largest to smallest*.  Note: this is handled by reordering factors (arrange will not be enough!). There is a function to assist in the `forcats` package that is included in `tidyverse`.  A simple google search should help.
+
+Make use of the coord_flip() layer to make the labels readable and color code the bars (not just the outlines of the bars!) by the MPAA rating of the movie.  Finish with a short few sentences describing what you see.
+
+```{r top10movies}
+deleteme <- 0
+```
+
+**Description of findings**
+
+## Genre vs. rating
+Secondly, I'd like to see how the distribution of ratings differs across genres.  Make a column chart that shows the **percentage** of rating within the genre. 
+
+```{r genrerating}
+```
+
+**Description of findings**
+
+## Revenue vs. Budget
+
+Visualize the total revenue (domestic + worldwide gross) vs. the production budget via a scatter plot colored by the genre.  Make sure to include appropriate titles AND change the scale to use dollar notation (see the `scales` package).  Comment on the relationship between budget and revenue as well as how the genres differ (or not).
+
+```{r revbud}
+```
+
+**Description of findings**
+
+
+
+
