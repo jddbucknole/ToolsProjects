@@ -1,5 +1,5 @@
 ---
-title: "Week 4: Tidyverse Practice and Data Joins"
+title: "Week 3: Data Joins, Tidying, and Maps"
 author: "YourNameHere"
 output: html_document
 ---
