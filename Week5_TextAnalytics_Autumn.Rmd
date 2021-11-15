@@ -1,0 +1,123 @@
+---
+title: "Week 7: Text analytics"
+author: "<your names here>"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidytext)
+library(wordcloud)
+library(textdata)
+```
+
+# Introduction
+
+This week, we will examine the text of the Harry Potter books.  While I assume most have either read the books or seen the movies, that is not a requirement.  We will utilize the package `harrypotter` created by Bradley Boehmke and hosted on github.  Make sure to install the package prior to knitting this document. The package contains the raw text of all books separated by chapter.  The code below reads in all books and combines them into one dataset separated by book and chapter.  The columns `text` contains the entirety of the associated chapter.
+
+Examine the code below and the resulting dataset `hpbooks`.  You should understand what is happening and get familiar with the end result.  For reference, `tibble` is the tidy version of `data.frame`.  It creates a tidy dataframe with the variables listed.  This is required because the package only provides the text in a character vector form.
+
+
+```{r}
+library(harrypotter)
+
+stone <- tibble(book = "1-Philosopher_Stone", numbook = 1, ch = 1:length(philosophers_stone), text = philosophers_stone)
+chamber <- tibble(book = "2-Chamber_of_Secrets", numbook = 2,ch = 1:length(chamber_of_secrets), text = chamber_of_secrets)
+prisoner <- tibble(book = "3-Prisoner_of_Azkaban", numbook = 3,ch = 1:length(prisoner_of_azkaban), text = prisoner_of_azkaban)
+goblet <- tibble(book = "4-Goblet_of_Fire", numbook = 4,ch = 1:length(goblet_of_fire), text = goblet_of_fire)
+phoenix <- tibble(book = "5-Order_of_the_Phoenix", numbook = 5,ch = 1:length(order_of_the_phoenix), text = order_of_the_phoenix)
+prince <- tibble(book = "6-Half_Blood_Prince", numbook = 6,ch = 1:length(half_blood_prince), text = half_blood_prince)
+hallows <- tibble(book = "7-Deathly_Hallows", numbook = 7,ch = 1:length(deathly_hallows), text = deathly_hallows)
+
+hpbooks <- stone %>%
+  bind_rows(chamber) %>%
+  bind_rows(prisoner) %>%
+  bind_rows(goblet) %>%
+  bind_rows(phoenix) %>%
+  bind_rows(prince) %>%
+  bind_rows(hallows) 
+```
+
+
+# Part 1: Content of the Books/Chapters
+
+This section will constitute a very simple dive into the words used in the books.  We won't explore context until part 2.  Expect to use a heavy dose of the tidyverse/ggplot techniques from the previous two weeks.
+
+## How long are the books and which is the longest?
+
+1. To begin, count how many total words (including stop words) are in the entire series.  This isn't going to be a perfect representation as the parsing isn't perfect in this dataset, but it should give a good estimate.
+
+2. Count how many words are in each book and make a line chart with book name (or number) on the x-axis and the number of words on the y. Note: if you use the book number, you will need to add an aesthetic `group = 1`. This graph should have the books in chronological order.  Make sure to have appropriate labels/titles.  
+
+```{r}
+deleteme <- 0
+```
+
+## Top words
+
+1. What are the top 10 words of the entire series (after removing stop words)?  Make a horizontal bar chart with the height (length) of the bar representing the frequency of the word.  Make sure to have appropriate labels/titles.  As you title will make it clear what is being plotted, you don't need an axis label for the words.  Also, make sure to display the bars in descending order of frequency.  Feel free to stem the words first if you'd like (optional).
+
+```{r}
+deleteme <- 0
+```
+
+
+2. You should notice that characters names appear more frequently that other words.  Add the characters names to the stop_words list and re-plot the top 10 words without character names.  The code below contains a list of characters.  Feel free to add to it.
+
+```{r}
+hp_characters <- c("harry", "ron", "hermione", "dumbledore", "sirius",
+                     "mcgonagall", "snape", "hagrid", "voldemort",
+                     "ginny","neville", "malfoy","crookshanks")
+
+stop_words_characters <- stop_words %>%
+  bind_rows(tibble(word = hp_characters, lexicon = "HP"))
+
+stop_words_characters <- c(stop_words, hp_characters)
+##Your code
+
+```
+
+
+3. Focusing only on the characters in the list above. Make a faceted bar graph including ONLY those characters occurrence separated by book.  The output should look quite similar to the output of numbers 1 and 2, but include 7 different graphs.  Comment on how the series focus change (or didn't) over time.
+
+3. Focusing only on the characters in the list above. Make a faceted bar graph including ONLY those characters occurrence separated by book.  The output should look quite similar to the output of numbers 1 and 2, but include 7 different graphs.  Comment on how the series focus change (or didn't) over time.
+
+```{r}
+deleteme <- 0
+```
+
+4. Make a wordcloud including the 100 most common words from the series (after removing stop_words--leave the characters names in there).  
+
+```{r}
+deleteme <- 0
+```
+
+# Part 2: Sentiment Analysis in Harry Potter
+
+## Mood over the series
+
+How does the 'mood' change in the Harry Potter series? Use the `bing` lexicon to find the 'net sentiment' by book.  To calculate 'net sentiment', take the number of positive words minus the number of negative words as determined by the `bing` lexicon.  Plot these net sentiments by book in either a dotplot or bar chart. You will need to use a variety of commands for this problem.
+
+```{r}
+deleteme <- 0
+```
+
+**Write a few sentences about what you've found.  How does the mood change as the books progress**
+
+## AFinn analysis of The Half-blood Prince
+
+Using the `AFINN` lexicon, find the average sentiment by chapter in book 6 (The Half Blood Prince) and plot it using a line plot. Note: you don't want to count the words as the average should include all words (duplicates included).  Does the average sentiment at the end of the book make sense? What happened? (Spoiler alert) Explain below the code.
+
+```{r}
+deleteme <- 0
+```
+
+## Anticipation in The Sorcerer's (Philosopher's) Stone
+
+Create a chapter by chapter count of anticipation words in the `nrc` lexicon.  When does the feeling of anticipation peak? Does that surprise you or does it make sense?  Plot the progression of anticipation words by chapter using a line plot.
+
+```{r}
+deleteme <- 0
+```
+
+
