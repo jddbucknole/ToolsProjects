@@ -1,0 +1,261 @@
+---
+title: 'Week 7: Machine Learning'
+author: "<yournameshere>"
+output: html_document
+---
+
+```{r setup, warning = F, message = F}
+library(tidyverse)
+library(rpart)
+library(e1071)
+library(class)
+library(caret)
+library(ISLR)
+library(fastDummies)
+library(rpart.plot)
+library(dendextend)
+library(cluster)
+```
+
+# Part 1: Supervised Learning
+
+Supervised learning is a method of classification or prediction in which we have a labelled set of data from which to make our predictions. Regression (both linear and logistic) are methods of supervised learning as the y values in the 'training' data are know *a priori*.  
+
+This section will focus on creating 3 new models and comparing the output to the regression/classification models we have already seen.  The focus will be on exploration rather than specifics.
+
+## Introduction
+
+For this study, we will examine some simulated data used in the book _Introduction to Statistical Learning in R_ on carseat sales.  Take a look at the data below (the code to view the data is already written).  The response variable of interest is `Sales`.  Make a visualization to see how the sales is related to a predictor or two (you do NOT need to look at all predictors in your viz).
+
+```{r}
+carseat <- ISLR::Carseats
+glimpse(carseat)
+```
+
+Next we need to create a training and test dataset to aid in model evaluation. We will skip the validation set for this exercise.  The code to create the train/test split is already shown below.  The seed is set to make sure that the results are the same every time you knit. The test set will allow us to compare the models based on the results on 'unseen data'
+
+```{r}
+set.seed(1234)
+train_frac <- .75
+index <- sample(1:nrow(carseat), train_frac * nrow(carseat))
+train <- carseat[index,]
+test <- carseat[-index,]
+```
+
+
+
+## Regression
+
+### Model 1: Linear Regression
+
+Fit a linear regression model to predict the sales of carseats using whatever predictors you deem useful.  Make sure to FIT the model using the training data only.  This will prevent overfitting.  Once you have settled on a model, predict the results in the test dataset.  
+
+```{r}
+deleteme <- 0
+```
+
+Now that you have predicted values for the test set, we need to create a metric to evaluate the models efficacy.  For that we will use root mean square error (RMSE).  The `caret` package has a function for this (called RMSE) that takes the fitted values and observed values as input.  Note: lower RMSE is better. Save the value as `rmse_lm`.
+
+```{r}
+deleteme <- 0
+```
+
+*Write a few sentences to describe the model including the significant variables and their effect on the response*
+
+
+
+### Model 2: Regression Trees
+
+Regression trees simply create a series of decision rules based on the predictors and average the results in the training set to create the prediction.  I have written the code in the next block to fit this model AND visualize it.  Please examine the plot as I think it is quite intuitive in it's interpretation.
+
+```{r}
+regtreemodel <- rpart(Sales ~ ., data = train)
+rpart.plot(regtreemodel)
+```
+
+You should note that the tree is quite busy trying to make the best prediction on the `train` set.  This can easily lead to overfitting.  To fix this, we can `prune` the tree.  This will remove the splits that are not as valuable.  There is a lot of detail being skipped here, but there are resources galore to decribe what is happening.  Below, you will find the code to prune and plot the pruned model. 
+
+```{r}
+pruned_regtree <- prune(regtreemodel, cp = .075)
+rpart.plot(pruned_regtree)
+```
+
+Notice that the pruned tree is MUCH simpler.  Once again, the solution makes predictions based on averaging the sales of the observations in the training set that end at that terminal node.  
+
+Add code to use the pruned tree to predict on the test set (same function as prediction elsewhere) and calculate the RMSE for this model (saved as rmse_regtree).
+
+```{r}
+deleteme <- 0
+```
+
+*Write a few lines interpreting the tree model (which predictors matter and how).  In addition, write a sentence comparing the results or the linear regression vs. the regression tree. Which do you prefer?*
+
+## Classification Methods
+
+So far, we have focused on predicting a numerical output, but what if we want to predict a categorical response.  We've actually already did this with logistic regression.  While there are many metrics to evaluate the efficacy of classification algorithms, we will examine the confusion matrices (`confusionMatrix` function in the caret package to see how the models perform).
+
+Since our output is numeric, we need to create a categorical representation of the response.  For this, we will try to predict the occurance of a large amount of sales.  If sales are over 10, we will consider this a success.  Create a new variable in the dataset that is 1 if sales exceed 10 and 0 otherwise.  Use `mutate` and `ifelse` to accomplish this.
+
+```{r}
+#Code to create success column and remove Sales for train and test sets
+train_class <- train %>%
+  mutate(success = ifelse(Sales > 10, 1, 0)) %>%
+  select(-Sales)
+
+
+
+test_class <- test %>%
+  mutate(success = ifelse(Sales > 10, 1, 0)) %>%
+  select(-Sales)
+
+```
+
+### Model 3: Logistic regression
+
+1. Fit a logistic regression model predicting the probability of a 'success' using all predictor variables EXCEPT Sales using the train_class dataset. 
+2. Choose which predictors you think are significant and make your final model called `logreg_model`.
+3. Predict the 'response' for the test_class data using your model.
+4. Convert the predicted probabilities to 1 if probability is greater than 0.5 and 0 otherwise.
+5. Use the `confusionMatrix()` function to evaluate the model.
+
+```{r}
+deleteme <- 0
+```
+
+*Write a sentence or two explaining which variables matter (and how) in predicting success*
+
+### Model 4: k-Nearest Neighbors
+
+The k-nearest neighbors algorithm is a simple method that computes the class probability of a test point as the percent of the k-nearest training points of a given class.  It returns the majority class in the k-nearest neighbors as the prediction unless specified.  Because distance metrics are essential to finding the nearest points, it is important that the features are normalized so the distances are comparable. This is common practice in most machine learning techniques.
+
+I have written a function to convert the categorical factor variables to dummy variables (as we need to convert 'distances') as well as scale the numeric variable to a 0-1 scale.  
+
+```{r}
+normalize <- function(x){
+  (max(x) - x)/(max(x) - min(x))
+}
+
+train_labels <- train_class$success
+knn_train <- train_class %>% select(-success)
+test_labels <- test_class$success
+knn_test <- test_class %>% select(-success)
+
+norm_train <- knn_train %>%
+  dummy_cols() %>%
+  select_if(is.numeric) %>%
+  mutate_all(normalize)
+
+norm_test <- knn_test %>%
+  dummy_cols() %>%
+  select_if(is.numeric) %>%
+  mutate_all(normalize)
+
+```
+
+Now we can create the kNN model using the `knn()` function.  The `knn()` function in the `class` package takes 4 arguments:
+
+- train (the normalized training dataset without the class labels)
+- test (the normalized test dataset without the class labels)
+- cl (the class labels for the training dataset)
+- k (the number of nearest neighbors to examine)
+
+This function will output the predicted class labels for the test dataset. We can then use the `confusionMatrix()` function to evaluate this models fit.  Feel free to try a few choices of `k` in the model if you'd like.
+
+```{r}
+#Fit the model and evaluate on the test set
+deleteme <- 0
+```
+
+*Write a sentence or two on the knn_model accuracy*
+
+### Model 5: Classification Trees
+
+Similar to the regression trees above, we can use the 'tree' structure to predict a categorical response.  In fact, the model is fit in the exact same way using `rpart`.  The difference is the final parameter should be `method = 'class'`.  Otherwise, everything else is the same!
+
+1. Fit the classification tree (`classtree_model`) using the `rpart()` function on the training data to predict `success`.
+2. prune the tree as above using cp = 0.075.
+3. Visualize the final model using `rpart.plot`.
+4. Predict the classes in the test set.
+5. Evaluation the model fit using the `confusionMatrix()` function
+
+```{r}
+deleteme <- 0
+```
+
+*Write a sentence or two on the classification tree accuracy*
+
+*Write a few sentences on how the various models compare in efficacy*
+
+# Unsupervised Learning
+
+Unsupervised learning is such that the data is not labelled *a priori*.  The goal is simply to find groups or clusters within the data based on similarities in the variables.  Distance metrics are key here as in `knn` but the fundamental difference is that clustering doesn't have predetermined groups.  In fact, we don't even know how many groups exist!  Market segmentation is a perfect example of this phenomenon.  Marketers seek to find similarities in their customers to (hopefully) target groups of people in similar ways.
+
+### Method 1: k-means clustering
+
+The k-means clustering algorithm contains steps that iterate
+
+1. Choose k random points to be the initial class centroids.
+2. Assign each point in the dataset to the class with the nearest centroid.
+3. Calculate the average of all points ina given class.  This is the new class centroid.
+4. Repeat steps 1-3 until convergence.
+
+The following [video](https://www.youtube.com/watch?v=IuRb3y8qKX4) shows this process.  The best part is that all of this happens under the hood and the function is simple!
+
+For our example, we will use the College data in the ISLR package to find 3 clusters within the colleges.  As with `knn` the data needs to be numeric and normalized.  The data is loaded and preprocessed below.  Add the code to run the kmeans algorithm.  The function is `kmeans()` which takes the data and the number of clusters you desire.  The output is the cluster label for each point.  To unify the results, I have set the random seed.  This will assure cluster 1 stays 'cluster 1'.
+
+```{r}
+normalize <- function(x){
+  (x - min(x))/(max(x) - min(x))
+}
+
+
+college <- College %>%
+  mutate(Private = ifelse(Private == "Yes", 1, 0)) %>%
+  mutate_all(normalize)
+
+set.seed(1234)
+#Your kmeans code (Save the results in a variable called clusters)
+
+```
+
+Examine the different clusters by looking through dataset.  Do you see any ways to 'define' the clusters in a contextual sense? What 'type' of school falls into cluster 1, 2, or 3? This is the art of data science!
+
+### Method 2: Hierarchical Clustering 
+
+Hierarchical clustering creates clusters by one of two approaches:
+
+1) Agglomerative: bottom up/all points start as their own group, merge closest groups until all clusters are joined.
+2) Divisive: top down/Start with all points in one cluster and break them apart.
+
+We will focus on agglomerative clustering approach.
+
+The algorithm is as follows:
+
+1) Scale the data (similar to kmeans).
+2) Calculate the distance between all clusters (using any defined distance metric)
+3) Merge clusters with the smallest intercluster distance (could use complete, single, average or maximal linkage)
+4) Iterate steps 2 and 3 until there is one cluster.
+
+The output is then visualized as a dendrogram (tree-like diagram).  From the dendrogram, you can choose the appropriate number of clusters.  It is recommended to choose the 'cut' between the splits of greatest distance.
+
+Let's repeat the analysis of the `College` data using hierarchical clustering.  Run the analysis using complete linkage and cut the tree at 3 clusters (show a dendrogram with colored branches).  
+
+
+
+```{r}
+deleteme <- 1
+```
+
+Now compare your results to the kmeans algorithm.  You should have 3 clusters from kmeans and 3 from hierarchical clustering.  Make a table (using the `table()` function) that compares the clustering results.  Do they match up? On what type of school do they differ?
+
+```{r}
+deleteme <- 1
+```
+
+## If time permits
+
+Run the kmeans() algorithm for a different number of clusters (k=1:10) and plot the withinss for each k vs. k. Find where the plot hits an `elbow` to choose the optimal number of clusters.
+
+OR
+
+Try using different linkages for the hierarchical clustering and note how the clustering changes.
