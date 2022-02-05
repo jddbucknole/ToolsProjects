@@ -9,11 +9,12 @@ library(tidyverse)
 library(babynames)
 library(scales)
 library(ggrepel)
+library(ggridges)
 ```
 
 # Part 1 Movies!
 
-```{r}
+```{r, warning = F, message = F}
 movie <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-10-23/movie_profit.csv")
 ```
 
@@ -27,6 +28,23 @@ deleteme <- 0
 
 **Description of findings**
 
+Now, let's compare the average profits of the movies by genre.  Make a column chart in descending order to illustrate which genres yield the most returns (note: you have to create the profit column--assume worldwide_gross includes domestic_gross).
+
+```{r profit}
+```
+
+Finally, we'll explore new aesthetics to examine the distribution of profit across genre.  For this, you'll make 3 plots:
+
+1. A side-by-side boxplot of profits by genre
+2. A side-by-side violin plot of profits by genre
+3. A ridgeline plot of profits by genre.  Google ridgeline plots and `geom_density_ridges` from the `ggridges` packages for assistance.  
+
+Special note: the 3 plots are all the same EXCEPT for the geom layer.
+
+**Comment on the differences in the 3 outlays of the data and compare to the column chart of the mean**
+
+
+
 
 # Part 2 Babynames
 
@@ -37,6 +55,7 @@ Create a graph showing the popularity of your group members first names over tim
 Here is an example for the Beatles. What name benefited from the appearance of the Fab Four?
 
 <center> <img src = "https://github.com/jddbucknole/ToolsProjects/blob/main/beatles.png?raw=true">
+</center>
 
 ```{r groupnames}
 deleteme <- 0
