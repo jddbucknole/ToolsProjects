@@ -1,0 +1,84 @@
+---
+title: "Week 10: Inference and Probability"
+author: "<your names here>"
+output: html_document
+---
+```{r, message = F, warning = F}
+library(tidyverse)
+library(Lock5Data)
+```
+
+# Part 1: Paulie's Pizzeria: Time to expand?
+
+According to Tom Larkin in his article, "8 Factors for Choosing a New Restaurant Location," the number 1 requirement is visibility.    He advises "to determine visibility, look at foot and car traffic patterns."  Who's walking by?  Who's driving by?  And of course, not only "who" matters, but also "how many."
+
+Tony Soprano is considering opening a new franchise in New Jersey called Paulie's Pizzaria.  Based on financial analyses, the site is acceptable only if the number of pedestrians passing the location averages more than 100 per hour. To determine if this site is acceptable, Tony hired a consulting firm to help with the collection and analysis of sample data.  The consulting firm arranged for the number of pedestrians for each of 40 randomly selected hours to be observed and recorded.  This data can be found on the web and can be downloaded with the following code.
+
+```{r, warning = F, message = F}
+ped <- read_csv("https://raw.githubusercontent.com/jddbucknole/SMB-A/master/week5PauliesPizza.csv")
+```
+
+Unfortunately, the consulting company reneged on the analysis phase of the project.  Your team has been hired to complete the necessary analysis of the data.  Tony knows very little about statistical methodology or terminology, but he knows about risk.  Sal has made it clear that he is very interested in this location and doesn't want to miss the opportunity if the site is acceptable, but he cannot afford to lose the capital investment if the restaurant fails.
+
+### Summary Statistics
+
+Before embarking any further, Tony would like to know some summary statistics and a simple graph showing the distribution of the number of pedestrians passing the site per hour.  
+
+```{r}
+#Code here examining basic summary stats and a single graph displaying the pedestrian distribution
+```
+
+
+### Time to test!
+
+Formulate the appropriate hypotheses, run the test, and draw appropriate conclusions.  You are in control of all specifics of the problem (i.e., choosing alpha and deciding how to manage the risks--there are no wrong answers, but you should justify your choices).  Fill in  your hypotheses below and make sure your conclusions are stated *in terms of the problem*.
+
+H0:
+
+HA:
+
+```{r}
+#Put additional code here to test the hypothesis. Only one line is needed, but more may be used.
+```
+
+Don't forget your conclusion
+
+
+
+# Part 2: The current Paulie's Pizzeria: How much are servers being tipped?
+
+While the analysts were diligently working on discovering if the new location was viable, the employees at the current restaurant have started to complain about their tip amounts.  Recent receipts have shown an average percentage tip of around 17\%, but there was some concern if there was a difference in tip between those who used cash or credit. Tony collected a sample of 157 recent bills and tip amounts as well as information on the method of payment.  The data can be accessed below in `RestaurantTips`.  First, find the average `PctTip` separated by whether or not the customer used credit.
+
+
+```{r}
+head(RestaurantTips)
+```
+
+After performing a perfunctory examination, Tony's employees note that the average tip is higher when the customer uses credit so they advocate a cashless model.  Paulie argues that this is just a small sample of bills and tells them to 'fuggedaboutit', but Christopher fights back saying that this is a significant difference.  Run the appropriate test to see if Christopher made his bones or will be sleeping with the fishes.  Don't forget to analyze your results in context!
+
+```{r}
+deleteme <- 0
+```
+
+## Part 3: Another cash business
+
+After several improvements to the restaurant (and intimidation tactics), Paulie's Pizzaria now requires reservations every night (no walk-ins allowed).  It's EXTREMELY popular so every table is expected to be filled every night.  There are currently 40 tables in the restaurant and there is never an issue filling reservations.  However, even with Tony's "management", approximately 15\% of all reservations are no-shows (i.e., 85\% do fulfill the reservation).  This creates a major problem of potentially leaving seats unfilled.  To mitigate this, Paulie's has 45 reservation slots every night (essentially overbooking) and they are always completely filled.  Overbooking is great to keep the place booming, but there are times in which more parties show up than the number of tables.  This leads to the restaurant turning those with reservations away.  Each party receives a gift card for $20 and a reservation for another night of their choice.  While this isn't optimal, it prevents tables from sitting empty.
+
+You have 2 jobs:
+
+1) Determine the probability that _at least one_ party is turned away (i.e., at least 41 people show up).
+2) Assuming each occupied table yields an average of \$70 of profit and the cost of turning someone away is \$40 (\$20 for the gift card and \$20 worth of ill will), what is the *expected* profit if 45 reservations are taken?
+
+Hint for Q2: 
+
+1) Make a vector of the probability that each number of people (0 to 45) come to the restaurant out of the 45--This follows a known distribution.  
+2) Make a vector of the amount of profit in each situation (this vector is defined differently above and below 40). 
+3) Take the sum of the product of the vectors to get the expected value.
+
+```{r}
+probs <- NULL
+profit <- NULL
+sum(probs*profit)
+```
+
+We could extend this to figure out what the optimal number of reservations to offer to maximize profit.
